@@ -8,26 +8,37 @@ import android.util.Log;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import heigvd.ch.gpsplayer.Globals;
 import heigvd.ch.gpsplayer.R;
+import heigvd.ch.gpsplayer.background.LocationSentEvent;
 import heigvd.ch.gpsplayer.data.Track;
 import heigvd.ch.gpsplayer.data.TrackPoint;
 
 public class TrackViewActivity extends FragmentActivity {
     private final static String TAG = "TrackViewActivity";
 
+    private Globals mGlobals;
+
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private Polyline mPolyline;
+
+    // Markers for start, end and current position
+    private Marker startMarker;
+    private Marker endMarker;
+    private Marker currentMarker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mGlobals = Globals.getInstance(this);
         setContentView(R.layout.activity_track_view);
         setUpMapIfNeeded();
     }
@@ -37,9 +48,17 @@ public class TrackViewActivity extends FragmentActivity {
         super.onResume();
         setUpMapIfNeeded();
 
+        mGlobals.eventBus.register(this);
+
         if (mMap != null) {
             refreshMarkers();
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mGlobals.eventBus.unregister(this);
     }
 
     private void refreshMarkers() {
@@ -67,6 +86,33 @@ public class TrackViewActivity extends FragmentActivity {
                         this.getResources().getDisplayMetrics().widthPixels,
                         this.getResources().getDisplayMetrics().heightPixels,
                         paddingPx));
+
+        if (startMarker == null) {
+            TrackPoint p = track.points[0];
+
+            startMarker = mMap.addMarker(new MarkerOptions()
+                    .position(new LatLng(p.latitude, p.longitude))
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+            currentMarker = mMap.addMarker(new MarkerOptions()
+                    .position(new LatLng(p.latitude, p.longitude))
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+
+            p = track.points[track.points.length - 1];
+
+            endMarker = mMap.addMarker(new MarkerOptions()
+                    .position(new LatLng(p.latitude, p.longitude))
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+        }
+    }
+
+    public void onEvent(final LocationSentEvent event) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                TrackPoint p = event.point;
+                currentMarker.setPosition(new LatLng(p.latitude, p.longitude));
+            }
+        });
     }
 
     /**

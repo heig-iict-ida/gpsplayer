@@ -53,7 +53,7 @@ public class GpxLoader {
                 }
                 String tag = parser.getName();
                 if (tag.equals("trk")) {
-                    return readTrack(parser);
+                    return readTrack(file, parser);
                 } else {
                     skip(parser);
                 }
@@ -67,7 +67,7 @@ public class GpxLoader {
         throw new GpxException("No <trk> found in GPX file");
     }
 
-    private static Track readTrack(XmlPullParser parser) throws IOException, XmlPullParserException, GpxException {
+    private static Track readTrack(File file, XmlPullParser parser) throws IOException, XmlPullParserException, GpxException {
         List<TrackPoint> trackPoints = null;
 
         parser.require(XmlPullParser.START_TAG, ns, "trk");
@@ -90,7 +90,7 @@ public class GpxLoader {
         if (trackPoints == null) {
             throw new GpxException("No <trkseg> found in GPX file");
         }
-        return new Track(trackPoints);
+        return new Track(file, trackPoints);
     }
 
     // Read a <trkseg>

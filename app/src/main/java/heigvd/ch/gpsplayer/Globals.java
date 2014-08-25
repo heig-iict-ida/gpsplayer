@@ -2,7 +2,10 @@ package heigvd.ch.gpsplayer;
 
 import android.content.Context;
 import android.content.Intent;
+import android.provider.ContactsContract;
 
+import de.greenrobot.event.EventBus;
+import heigvd.ch.gpsplayer.background.RunTrackService;
 import heigvd.ch.gpsplayer.data.Track;
 
 public class Globals {
@@ -27,15 +30,34 @@ public class Globals {
     private Context context;
     private Track currentTrack = null;
 
+    public final EventBus eventBus = new EventBus();
+
     public Globals(Context context) {
         this.context = context;
     }
 
     public void setCurrentTrack(Track track) {
+        stopService();
         currentTrack = track;
     }
 
     public Track getCurrentTrack () {
         return currentTrack;
+    }
+
+    private boolean serviceRunning = false;
+    public void startService() {
+        final Intent intent = new Intent(context, RunTrackService.class);
+        context.startService(intent);
+        serviceRunning = true;
+    }
+
+    public void stopService() {
+        context.stopService(new Intent(context, RunTrackService.class));
+        serviceRunning = false;
+    }
+
+    public boolean isRunning() {
+        return serviceRunning;
     }
 }

@@ -13,4 +13,10 @@ public class TrackPoint {
         this.longitude = lon;
         this.altitude = altitude;
     }
+
+    @Override
+    public String toString() {
+        return "TrackPoint[timestamp=" + timestamp + ",lat="+latitude +",lon="+longitude+"]";
+
+    }
 }

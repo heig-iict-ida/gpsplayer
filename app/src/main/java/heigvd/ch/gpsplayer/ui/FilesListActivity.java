@@ -59,6 +59,7 @@ public class FilesListActivity extends ListActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Log.i(TAG, "Click on " + filenames[position]);
+                // TODO: Avoid reloading if this is the same track
                 new LoadTrackTask().execute(gpxFiles[position]);
             }
         });
@@ -82,25 +83,6 @@ public class FilesListActivity extends ListActivity {
         super.onResume();
         refreshFiles();
     }
-
-    /*@Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.files_list, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }*/
 
     // A task that load a GPX file and replace the current track by the newly loaded track
     public class LoadTrackTask extends AsyncTask<File, Void, Track> {
