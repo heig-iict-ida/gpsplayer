@@ -1,7 +1,9 @@
 package heigvd.ch.gpsplayer.ui;
 
 import android.app.ListActivity;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -9,12 +11,18 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import heigvd.ch.gpsplayer.Globals;
 import heigvd.ch.gpsplayer.io.GpxLoader;
@@ -45,22 +53,30 @@ public class FilesListActivity extends ListActivity {
     }
 
     private File[] gpxFiles;
-    private String[] filenames;
 
     private View mProgressView;
+
+    private Globals mGlobals;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mGlobals = Globals.getInstance(this);
         setContentView(R.layout.activity_files_list);
 
         final ListView lv = getListView();
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.i(TAG, "Click on " + filenames[position]);
-                // TODO: Avoid reloading if this is the same track
-                new LoadTrackTask().execute(gpxFiles[position]);
+                final File trackFile = gpxFiles[position];
+                if (!mGlobals.isCurrentTrack(trackFile)) {
+                    new LoadTrackTask().execute(trackFile);
+                } else {
+                    Log.i(TAG, "Track already loaded, just displaying it");
+                    final Intent intent = new Intent(FilesListActivity.this, TrackViewActivity.class);
+                    startActivity(intent);
+                }
+                refreshFiles();
             }
         });
 
@@ -69,12 +85,29 @@ public class FilesListActivity extends ListActivity {
 
     private void refreshFiles() {
         gpxFiles = listAvailableFiles();
-        filenames = new String[gpxFiles.length];
-        for (int i = 0; i < gpxFiles.length; ++i) {
-            filenames[i] = gpxFiles[i].getName();
+
+        List<Map<String, String>> listData = new ArrayList<Map<String, String>>();
+        for (File f : gpxFiles) {
+            Map<String, String> data = new HashMap<String, String>();
+            data.put("title", f.getName());
+            if (mGlobals.isCurrentTrack(f)) {
+                data.put("icon", Integer.toString(R.drawable.ic_action_play));
+            } else {
+                data.put("icon", Integer.toString(R.drawable.ic_action_transparent));
+            }
+
+            listData.add(data);
         }
 
-        ArrayAdapter<String> adapter = new ArrayAdapter(this, R.layout.activity_files_list_row, R.id.row_title, filenames);
+        SimpleAdapter adapter = new SimpleAdapter(
+                this,
+                listData,
+                R.layout.activity_files_list_row,
+                new String[]{ "title", "icon"},
+                new int[]{ R.id.row_title, R.id.row_icon}
+        );
+
+        //ArrayAdapter<String> adapter = new ArrayAdapter(this, R.layout.activity_files_list_row, R.id.row_title, filenames);
         setListAdapter(adapter);
     }
 
@@ -109,7 +142,7 @@ public class FilesListActivity extends ListActivity {
             if (track == null) {
                 Utils.showMessage(FilesListActivity.this, "Error loading file");
             } else {
-                Globals.getInstance(FilesListActivity.this).setCurrentTrack(track);
+                mGlobals.setCurrentTrack(track);
 
                 Log.i(TAG, "Track loaded");
                 final Intent intent = new Intent(FilesListActivity.this, TrackViewActivity.class);

@@ -3,6 +3,7 @@ package heigvd.ch.gpsplayer.data;
 import android.util.Log;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;

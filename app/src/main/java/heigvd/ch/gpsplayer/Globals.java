@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.provider.ContactsContract;
 
+import java.io.File;
+
 import de.greenrobot.event.EventBus;
 import heigvd.ch.gpsplayer.background.RunTrackService;
 import heigvd.ch.gpsplayer.data.Track;
@@ -43,6 +45,10 @@ public class Globals {
 
     public Track getCurrentTrack () {
         return currentTrack;
+    }
+
+    public boolean isCurrentTrack(File f) {
+        return currentTrack != null && Utils.fileEquals(f, currentTrack.file);
     }
 
     private boolean serviceRunning = false;
