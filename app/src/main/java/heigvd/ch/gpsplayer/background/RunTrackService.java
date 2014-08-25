@@ -24,7 +24,10 @@ public class RunTrackService extends Service {
 
     private final long MIN_LOC_UPDATE_INTERVAL = 200;
 
-    private final static String MOCK_PROVIDER_NAME = LocationManager.GPS_PROVIDER;
+    // Providers to mock
+    private final static String[] PROVIDERS = new String[]{
+            LocationManager.GPS_PROVIDER,
+            LocationManager.NETWORK_PROVIDER};
 
     private LocationManager mLocationManager;
 
@@ -92,15 +95,17 @@ public class RunTrackService extends Service {
                     final TrackPoint point = mTrack.points[pointIndex];
                     prevIndex = pointIndex;
 
-                    Location mockLocation = new Location(MOCK_PROVIDER_NAME);
-                    mockLocation.setLatitude(point.latitude);
-                    mockLocation.setLongitude(point.longitude);
-                    mockLocation.setTime(System.currentTimeMillis());
-                    mockLocation.setAltitude(point.altitude);
-                    mockLocation.setAccuracy(10.0f);
-                    mockLocation.setElapsedRealtimeNanos(SystemClock.elapsedRealtimeNanos());
+                    for (String provider : PROVIDERS) {
+                        Location mockLocation = new Location(provider);
+                        mockLocation.setLatitude(point.latitude);
+                        mockLocation.setLongitude(point.longitude);
+                        mockLocation.setTime(System.currentTimeMillis());
+                        mockLocation.setAltitude(point.altitude);
+                        mockLocation.setAccuracy(10.0f);
+                        mockLocation.setElapsedRealtimeNanos(SystemClock.elapsedRealtimeNanos());
 
-                    mLocationManager.setTestProviderLocation(MOCK_PROVIDER_NAME, mockLocation);
+                        mLocationManager.setTestProviderLocation(provider, mockLocation);
+                    }
 
                     mGlobals.eventBus.post(new LocationSentEvent(point));
                 }
@@ -130,16 +135,19 @@ public class RunTrackService extends Service {
         boolean supportsBearing = false;
         int powerRequirement = 0;
         int accuracy = 10;
-        mLocationManager.addTestProvider(MOCK_PROVIDER_NAME,
-                requiresNetwork,
-                requiresSatellite,
-                requiresCell,
-                hasMonetaryCost,
-                supportsAltitude,
-                supportsSpeed,
-                supportsBearing,
-                powerRequirement,
-                accuracy);
+        for (String provider : PROVIDERS) {
+            mLocationManager.addTestProvider(
+                    provider,
+                    requiresNetwork,
+                    requiresSatellite,
+                    requiresCell,
+                    hasMonetaryCost,
+                    supportsAltitude,
+                    supportsSpeed,
+                    supportsBearing,
+                    powerRequirement,
+                    accuracy);
+        }
     }
 
     @Override
@@ -155,7 +163,9 @@ public class RunTrackService extends Service {
         } catch (InterruptedException e) {
             Log.e(TAG, "Worker thread join ", e);
         }
-        mLocationManager.removeTestProvider(MOCK_PROVIDER_NAME);
+        for (String provider : PROVIDERS) {
+            mLocationManager.removeTestProvider(provider);
+        }
         stopForeground(true);
     }
 
