@@ -19,6 +19,7 @@
         </activity>
         <activity
             android:name=".ui.TrackViewActivity"
+            android:parentActivityName=".ui.FilesListActivity"
             android:label="@string/title_activity_track_view" >
         </activity>
 

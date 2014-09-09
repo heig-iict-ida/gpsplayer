@@ -1,8 +1,12 @@
 package heigvd.ch.gpsplayer.ui;
 
+import android.app.TaskStackBuilder;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
+import android.view.MenuItem;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -40,6 +44,8 @@ public class TrackViewActivity extends FragmentActivity {
         mGlobals = Globals.getInstance(this);
         setContentView(R.layout.activity_track_view);
         setUpMapIfNeeded();
+
+        getActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -58,6 +64,31 @@ public class TrackViewActivity extends FragmentActivity {
     protected void onPause() {
         super.onPause();
         mGlobals.eventBus.unregister(this);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Enable Up navigation, see
+        // http://developer.android.com/training/implementing-navigation/ancestral.html
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                Intent upIntent = NavUtils.getParentActivityIntent(this);
+                if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
+                    // This activity is NOT part of this app's task, so create a new task
+                    // when navigating up, with a synthesized back stack.
+                    TaskStackBuilder.create(this)
+                            // Add all of this activity's parents to the back stack
+                            .addNextIntentWithParentStack(upIntent)
+                            // Navigate up to the closest parent
+                            .startActivities();
+                } else {
+                    // This activity is part of this app's task, so simply
+                    // navigate up to the logical parent activity.
+                    NavUtils.navigateUpTo(this, upIntent);
+                }
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void refreshMarkers() {
