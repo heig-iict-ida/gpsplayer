@@ -9,5 +9,8 @@
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="title_activity_import_track">Import GPX</string>
+    <string name="action_show">Show</string>
+    <string name="action_delete">Delete</string>
+    <string name="dialog_delete_track">Delete track ?</string>
 
 </resources>

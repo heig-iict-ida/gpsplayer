@@ -1,5 +1,6 @@
 package heigvd.ch.gpsplayer.ui;
 
+import android.app.FragmentManager;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
@@ -8,7 +9,9 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,9 +32,10 @@ import heigvd.ch.gpsplayer.io.GpxLoader;
 import heigvd.ch.gpsplayer.R;
 import heigvd.ch.gpsplayer.Utils;
 import heigvd.ch.gpsplayer.data.Track;
+import heigvd.ch.gpsplayer.ui.fragments.DeleteTrackDialogFragment;
 
 
-public class FilesListActivity extends ListActivity {
+public class FilesListActivity extends ListActivity implements DeleteTrackDialogFragment.DialogListener {
     private final static String TAG = "FilesListActivity";
 
     private static File[] listAvailableFiles() {
@@ -64,18 +68,24 @@ public class FilesListActivity extends ListActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 final File trackFile = gpxFiles[position];
-                if (!mGlobals.isCurrentTrack(trackFile)) {
-                    new LoadTrackTask().execute(trackFile);
-                } else {
-                    Log.i(TAG, "Track already loaded, just displaying it");
-                    final Intent intent = new Intent(FilesListActivity.this, TrackViewActivity.class);
-                    startActivity(intent);
-                }
+                showTrack(trackFile);
                 refreshFiles();
             }
         });
 
+        registerForContextMenu(lv);
+
         mProgressView = findViewById(R.id.progress);
+    }
+
+    private void showTrack(File trackFile) {
+        if (!mGlobals.isCurrentTrack(trackFile)) {
+            new LoadTrackTask().execute(trackFile);
+        } else {
+            Log.i(TAG, "Track already loaded, just displaying it");
+            final Intent intent = new Intent(FilesListActivity.this, TrackViewActivity.class);
+            startActivity(intent);
+        }
     }
 
     private void refreshFiles() {
@@ -109,6 +119,40 @@ public class FilesListActivity extends ListActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        refreshFiles();
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.activity_files_list_context_menu, menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item
+                .getMenuInfo();
+        final int position = info.position;
+        final File trackFile = gpxFiles[position];
+        switch (item.getItemId()) {
+            case R.id.action_show:
+                showTrack(trackFile);
+                return true;
+            case R.id.action_delete:
+                FragmentManager fm = getFragmentManager();
+                DeleteTrackDialogFragment dialog = DeleteTrackDialogFragment.newInstance(trackFile);
+                dialog.show(fm, "delete_track_fragment");
+                return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void onDeleted(File trackFile) {
+        if (mGlobals.isCurrentTrack(trackFile)) {
+            mGlobals.stopService();
+            mGlobals.setCurrentTrack(null);
+        }
         refreshFiles();
     }
 
