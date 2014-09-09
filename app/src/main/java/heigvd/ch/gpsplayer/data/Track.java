@@ -17,6 +17,7 @@ import de.greenrobot.event.EventBus;
 public class Track {
     private final static String TAG = "Track";
 
+    public final String name;
     public final File file;
     public final TrackPoint[] points;
     public final long[] timestamps;
@@ -24,7 +25,8 @@ public class Track {
     // timestamps relative to timestamps[0]
     private final long[] mRelTimestamps;
 
-    public Track(File file, List<TrackPoint> points) {
+    public Track(File file, String name, List<TrackPoint> points) {
+        this.name = name;
         this.file = file;
         // Ensure sorted points
         Collections.sort(points, new Comparator<TrackPoint>() {

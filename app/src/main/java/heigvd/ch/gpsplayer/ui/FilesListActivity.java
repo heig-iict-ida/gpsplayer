@@ -36,12 +36,7 @@ public class FilesListActivity extends ListActivity {
 
     private static File[] listAvailableFiles() {
         // Ensure directory exists
-        File dir = Environment.getExternalStoragePublicDirectory("gpsplayer");
-        Log.i(TAG, "Storage directory : " + dir);
-        if (!dir.exists()) {
-            dir.mkdirs();
-            Log.i(TAG, "Created directory : " + dir);
-        }
+        File dir = Utils.getStorageDirectory();
 
         File[] gpxFiles = dir.listFiles(new FilenameFilter() {
             @Override

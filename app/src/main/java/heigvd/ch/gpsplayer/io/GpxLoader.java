@@ -6,8 +6,8 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
+import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.text.ParseException;
@@ -15,8 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import heigvd.ch.gpsplayer.Utils;
-import heigvd.ch.gpsplayer.data.TrackPoint;
 import heigvd.ch.gpsplayer.data.Track;
+import heigvd.ch.gpsplayer.data.TrackPoint;
 
 public class GpxLoader {
     public static class GpxException extends Exception {
@@ -37,7 +37,6 @@ public class GpxLoader {
     private static final String ns = null;
 
     public static Track Load(File file) throws GpxException {
-        Track track = null;
         try {
             XmlPullParserFactory parserFactory = XmlPullParserFactory.newInstance();
             XmlPullParser parser = parserFactory.newPullParser();
@@ -59,9 +58,9 @@ public class GpxLoader {
                 }
             }
         } catch (XmlPullParserException e) {
-            throw new GpxException("Error parsing XML : " + file.getAbsolutePath(), e);
+            throw new GpxException("Error parsing XML", e);
         } catch (IOException e) {
-            throw new GpxException("Error loading file : " + file.getAbsolutePath(), e);
+            throw new GpxException("Error loading file", e);
         }
 
         throw new GpxException("No <trk> found in GPX file");
@@ -69,6 +68,7 @@ public class GpxLoader {
 
     private static Track readTrack(File file, XmlPullParser parser) throws IOException, XmlPullParserException, GpxException {
         List<TrackPoint> trackPoints = null;
+        String name = "";
 
         parser.require(XmlPullParser.START_TAG, ns, "trk");
         while (parser.next() != XmlPullParser.END_DOCUMENT) {
@@ -82,6 +82,9 @@ public class GpxLoader {
                     Log.w(TAG, "Multiple segments in track. Only last one will be considered");
                 }
                 trackPoints = readSegment(parser);
+            } else if (tag.equals("name")) {
+                name = readTrackName(parser);
+                Log.i(TAG, "Found track name : " + name);
             } else {
                 skip(parser);
             }
@@ -90,7 +93,15 @@ public class GpxLoader {
         if (trackPoints == null) {
             throw new GpxException("No <trkseg> found in GPX file");
         }
-        return new Track(file, trackPoints);
+        final Track track = new Track(file, name, trackPoints);
+        return track;
+    }
+
+    private static String readTrackName(XmlPullParser parser) throws IOException, XmlPullParserException {
+        parser.require(XmlPullParser.START_TAG, ns, "name");
+        final String name = readText(parser);
+        parser.require(XmlPullParser.END_TAG, ns, "name");
+        return name;
     }
 
     // Read a <trkseg>
@@ -110,8 +121,8 @@ public class GpxLoader {
                 skip(parser);
             }
         }
+        Log.i(TAG, trackPoints.size() + " points loaded in trkseg");
         return trackPoints;
-
     }
 
     private static TrackPoint readTrackPoint(XmlPullParser parser) throws IOException, XmlPullParserException, GpxException {
@@ -190,3 +201,4 @@ public class GpxLoader {
         }
     }
 }
+

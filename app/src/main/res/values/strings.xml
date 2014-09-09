@@ -4,5 +4,10 @@
     <string name="app_name">GpsPlayer</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_track_view">Track view</string>
+    <string name="name_track_dialog_title">Name for new track</string>
+    <string name="name_track_dialog_message">Enter a name for the new track</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="title_activity_import_track">Import GPX</string>
 
 </resources>
