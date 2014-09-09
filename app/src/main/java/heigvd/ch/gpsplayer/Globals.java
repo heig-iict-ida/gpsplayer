@@ -2,7 +2,6 @@ package heigvd.ch.gpsplayer;
 
 import android.content.Context;
 import android.content.Intent;
-import android.provider.ContactsContract;
 
 import java.io.File;
 
@@ -54,17 +53,22 @@ public class Globals {
 
     private boolean serviceRunning = false;
 
+    // This should only be call from the service
+    public void setServiceRunning(boolean running) {
+        serviceRunning = running;
+        eventBus.post(new ServiceStateChangedEvent());
+    }
+
     public void startService() {
         final Intent intent = new Intent(context, RunTrackService.class);
         context.startService(intent);
-        serviceRunning = true;
-        eventBus.post(new ServiceStateChangedEvent());
+        setServiceRunning(true);
+
     }
 
     public void stopService() {
         context.stopService(new Intent(context, RunTrackService.class));
-        serviceRunning = false;
-        eventBus.post(new ServiceStateChangedEvent());
+        setServiceRunning(false);
     }
 
     public boolean isRunning() {

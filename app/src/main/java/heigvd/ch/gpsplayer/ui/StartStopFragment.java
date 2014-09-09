@@ -87,7 +87,7 @@ public class StartStopFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        mGlobals.eventBus.register(this);
+        mGlobals.eventBus.unregister(this);
     }
 
     @Override

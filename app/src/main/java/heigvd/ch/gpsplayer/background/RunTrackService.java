@@ -113,6 +113,8 @@ public class RunTrackService extends Service {
 
             int prevProgress = 0;
 
+            mGlobals.setServiceRunning(true);
+
             Notification.Builder runningBuilder = getBaseNotifBuilder();
             runningBuilder.addAction(R.drawable.ic_action_stop, "Stop", mStopIntent);
 
@@ -122,6 +124,11 @@ public class RunTrackService extends Service {
 
                 if (elapsed > mTrack.getDuration()) {
                     Log.i(TAG, "Track finished");
+                    /*Notification.Builder finishedBuilder = getBaseNotifBuilder();
+                    finishedBuilder.setProgress(0, 0, false);
+                    finishedBuilder.setContentText("Track finished");
+                    mNotifManager.notify(NOTIF_ID, finishedBuilder.build());*/
+                    stopSelf();
                     break;
                 }
 
@@ -159,13 +166,6 @@ public class RunTrackService extends Service {
                     Thread.sleep(mIntervalMS);
                 } catch (InterruptedException e) { }
             }
-
-            Notification.Builder finishedBuilder = getBaseNotifBuilder();
-            finishedBuilder.setProgress(0, 0, false);
-            finishedBuilder.setContentText("Track finished");
-            mNotifManager.notify(NOTIF_ID, finishedBuilder.build());
-
-            mGlobals.stopService();
 
             Log.i(TAG, "Mock location service stopped");
         }
@@ -206,7 +206,7 @@ public class RunTrackService extends Service {
         if (intent != null && intent.hasExtra(EXTRA_REQUEST_CODE_KEY)) {
             final int requestCode = intent.getIntExtra(EXTRA_REQUEST_CODE_KEY, -1);
             if (requestCode == PLAY_STOP_REQUEST_CODE) {
-                mWorkerThread.quit();
+                stopSelf();
             } else {
                 // TODO: This shouldn't happen : report to rollbar
                 Log.e(TAG, "Invalid requestCode : " + requestCode);
@@ -217,6 +217,7 @@ public class RunTrackService extends Service {
 
     @Override
     public void onDestroy() {
+        Log.i(TAG, "Stopping service");
         mWorkerThread.quit();
         try {
             mWorkerThread.join();
@@ -227,6 +228,8 @@ public class RunTrackService extends Service {
             mLocationManager.removeTestProvider(provider);
         }
         stopForeground(true);
+
+        mGlobals.setServiceRunning(false);
     }
 
     @Override
