@@ -12,17 +12,39 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.widget.EditText;
 
+import java.io.File;
 import java.nio.charset.Charset;
 
 import heigvd.ch.gpsplayer.R;
 
 // A dialog that ask the user to give a filename, limiting the available characters
 public class FilenameDialogFragment extends DialogFragment {
+    public static String ARG_TRACK_NAME;
+
+    public static FilenameDialogFragment newInstance(String defaultTrackName) {
+        FilenameDialogFragment f = new FilenameDialogFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_TRACK_NAME, defaultTrackName);
+        f.setArguments(args);
+        return f;
+    }
+
+
     private DialogListener mListener;
+    private String mTrackName;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mTrackName = getArguments() != null ? getArguments().getString(ARG_TRACK_NAME, "") : "";
+        // Clean filename to keep only basename
+        final int lastSlash = mTrackName.lastIndexOf(File.separatorChar);
+        if (lastSlash != -1) {
+            mTrackName = mTrackName.substring(lastSlash);
+        }
+        if (mTrackName.endsWith(".gpx")) {
+            mTrackName = mTrackName.substring(0, mTrackName.length() - 4);
+        }
     }
 
     @Override
@@ -76,6 +98,7 @@ public class FilenameDialogFragment extends DialogFragment {
         // Use the Builder class for convenient dialog construction
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         final EditText input = new EditText(getActivity());
+        input.setText(mTrackName);
         input.setFilters(new InputFilter[]{new LowercaseASCIIFilter()});
         builder.setTitle(R.string.name_track_dialog_title)
                 .setMessage(R.string.name_track_dialog_message)

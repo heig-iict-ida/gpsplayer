@@ -37,7 +37,7 @@ public class ImportTrackActivity extends Activity implements FilenameDialogFragm
 
     private Globals mGlobals;
 
-    private Track mTrack;
+    private StreamWithFileNameHint mInput;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,21 +47,43 @@ public class ImportTrackActivity extends Activity implements FilenameDialogFragm
         setContentView(R.layout.activity_import_track);
 
         // We proceed as follow :
-        // 1. Ask the user to name the new track (we'll use the name as a filename)
-        // 1. Copy the GPX file to our own directory (CopyFileTask)
-        // 2. Load the track from GPX (ImportGPXTask)
-        // 3. Goto new track view
-        //new ImportGpxTask(getIntent()).execute();
+        // 1. Get the stream and filename hint from intent (GetInputTask)
+        // 2. Ask the user a filename for the new track (FilenameDialogFragment)
+        // 3. Copy the GPX file to our own directory (CopyFileTask)
+        // 4. Load the track from GPX (ImportGPXTask)
+        // 5. Goto new track view
+        new GetInputTask(getIntent()).execute();
+    }
 
+    class GetInputTask extends AsyncTask<Void, Void, StreamWithFileNameHint> {
+        private final Intent mIntent;
+        public GetInputTask(Intent intent) {
+            this.mIntent = intent;
+        }
+
+        @Override
+        protected StreamWithFileNameHint doInBackground(Void... params) {
+            StreamWithFileNameHint input = getGpxStream(mIntent);
+            return input;
+        }
+
+        @Override
+        protected void onPostExecute(StreamWithFileNameHint input) {
+            onInput(input);
+        }
+    }
+
+    public void onInput(StreamWithFileNameHint input) {
+        mInput = input;
         FragmentManager fm = getFragmentManager();
 
-        FilenameDialogFragment dialog = new FilenameDialogFragment();
+        FilenameDialogFragment dialog = FilenameDialogFragment.newInstance(mInput.filenameHint);
         dialog.show(fm, "name_track_dialog");
     }
 
     @Override
     public void onOK(String filename) {
-        new CopyFileTask(getIntent()).execute(filename);
+        new CopyFileTask(mInput.stream).execute(filename);
     }
 
     @Override
@@ -70,22 +92,19 @@ public class ImportTrackActivity extends Activity implements FilenameDialogFragm
     }
 
     class CopyFileTask extends AsyncTask<String, Void, File> {
-        private final Intent mIntent;
-        public CopyFileTask(Intent intent) {
-            this.mIntent = intent;
+        private final InputStream mStream;
+        public CopyFileTask(InputStream stream) {
+            this.mStream = stream;
         }
 
         @Override
         protected File doInBackground(String... params) {
             final String filename = params[0];
-            InputStream gpxStream = getGpxStream(mIntent);
-            if (gpxStream == null) {
-                return null;
-            }
+
             final File outFile = new File(Utils.getStorageDirectory(), filename + ".gpx");
             try {
                 OutputStream outStream =new FileOutputStream(outFile);
-                ByteStreams.copy(gpxStream, outStream);
+                ByteStreams.copy(mStream, outStream);
                 return outFile;
             } catch (IOException e) {
                 Log.e(TAG, "Error copying file", e);
@@ -138,10 +157,21 @@ public class ImportTrackActivity extends Activity implements FilenameDialogFragm
         }
     }
 
+    // Utility class to associate a filename hint with a stream
+    public static class StreamWithFileNameHint {
+        public final InputStream stream;
+        public final String filenameHint;
+
+        public StreamWithFileNameHint(InputStream s, String n) {
+            stream = s;
+            filenameHint = n;
+        }
+    }
+
     // Given a SEND, VIEW or ATTACH_DATA intent that contains either the path to a GPX file or
     // a link to the file content in a TEXT extra (like when using Dropbox's share feature),
     // Returns a BufferedReader to read the content or null if something goes wrong
-    private static InputStream getGpxStream(Intent intent) {
+    private static StreamWithFileNameHint getGpxStream(Intent intent) {
         if (intent == null) {
             return null;
         }
@@ -173,7 +203,7 @@ public class ImportTrackActivity extends Activity implements FilenameDialogFragm
             Log.i(TAG, "Url : " + urltext);
             try {
                 final URL url = new URL(urltext);
-                return url.openStream();
+                return new StreamWithFileNameHint(url.openStream(), url.getFile());
             } catch (MalformedURLException e) {
                 Log.e(TAG, "Invalid URL : " + urltext, e);
                 return null;
@@ -189,7 +219,8 @@ public class ImportTrackActivity extends Activity implements FilenameDialogFragm
             final String filename = uri.getPath();
             Log.i(TAG, "Importing " + filename);
             try {
-                return new FileInputStream(new File(filename));
+                final File f = new File(filename);
+                return new StreamWithFileNameHint(new FileInputStream(f), f.getName());
             } catch (IOException e) {
                 Log.e(TAG, "Failed loading file : " + filename, e);
                 return null;
