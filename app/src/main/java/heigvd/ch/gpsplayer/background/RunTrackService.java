@@ -111,7 +111,7 @@ public class RunTrackService extends Service {
             final long startTime = System.currentTimeMillis();
             int prevIndex = -1;
 
-            int prevProgress = 0;
+            int prevProgress = -1;
 
             mGlobals.setServiceRunning(true);
 
