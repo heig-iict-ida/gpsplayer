@@ -1,4 +1,4 @@
-package heigvd.ch.gpsplayer.background;
+package heigvd.ch.gpsplayer.events;
 
 import heigvd.ch.gpsplayer.data.TrackPoint;
 

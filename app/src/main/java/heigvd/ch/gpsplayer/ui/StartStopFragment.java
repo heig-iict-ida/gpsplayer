@@ -1,16 +1,23 @@
 package heigvd.ch.gpsplayer.ui;
 
 import android.app.Activity;
+import android.app.Service;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.telephony.ServiceState;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import heigvd.ch.gpsplayer.Globals;
 import heigvd.ch.gpsplayer.R;
+import heigvd.ch.gpsplayer.data.TrackPoint;
+import heigvd.ch.gpsplayer.events.LocationSentEvent;
+import heigvd.ch.gpsplayer.events.ServiceStateChangedEvent;
 
 
 // Fragment containing start/stop/reset controls
@@ -55,6 +62,15 @@ public class StartStopFragment extends Fragment {
         return v;
     }
 
+    public void onEvent(final ServiceStateChangedEvent event) {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+               refreshButtons();
+            }
+        });
+    }
+
     private void refreshButtons() {
         final boolean running = mGlobals.isRunning();
         mStartBtn.setEnabled(!running);
@@ -65,6 +81,13 @@ public class StartStopFragment extends Fragment {
     public void onResume() {
         super.onResume();
         refreshButtons();
+        mGlobals.eventBus.register(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mGlobals.eventBus.register(this);
     }
 
     @Override

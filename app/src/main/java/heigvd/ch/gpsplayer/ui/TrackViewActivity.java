@@ -3,7 +3,6 @@ package heigvd.ch.gpsplayer.ui;
 import android.graphics.Color;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -18,7 +17,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 
 import heigvd.ch.gpsplayer.Globals;
 import heigvd.ch.gpsplayer.R;
-import heigvd.ch.gpsplayer.background.LocationSentEvent;
+import heigvd.ch.gpsplayer.events.LocationSentEvent;
 import heigvd.ch.gpsplayer.data.Track;
 import heigvd.ch.gpsplayer.data.TrackPoint;
 

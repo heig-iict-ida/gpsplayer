@@ -9,6 +9,7 @@ import java.io.File;
 import de.greenrobot.event.EventBus;
 import heigvd.ch.gpsplayer.background.RunTrackService;
 import heigvd.ch.gpsplayer.data.Track;
+import heigvd.ch.gpsplayer.events.ServiceStateChangedEvent;
 
 public class Globals {
     private static Globals instance = null;
@@ -52,15 +53,18 @@ public class Globals {
     }
 
     private boolean serviceRunning = false;
+
     public void startService() {
         final Intent intent = new Intent(context, RunTrackService.class);
         context.startService(intent);
         serviceRunning = true;
+        eventBus.post(new ServiceStateChangedEvent());
     }
 
     public void stopService() {
         context.stopService(new Intent(context, RunTrackService.class));
         serviceRunning = false;
+        eventBus.post(new ServiceStateChangedEvent());
     }
 
     public boolean isRunning() {

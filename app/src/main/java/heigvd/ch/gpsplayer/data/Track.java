@@ -46,6 +46,10 @@ public class Track {
         }
     }
 
+    public long getDuration() {
+        return timestamps[timestamps.length - 1] - timestamps[0];
+    }
+
     public long getStartTime() {
         return this.timestamps[0];
     }
