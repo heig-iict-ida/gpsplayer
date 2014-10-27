@@ -8,6 +8,8 @@
 .idea/datasources.xml
 .idea/dataSources.ids
 
+release.keystore
+
 #built application files
 *.apk
 *.ap_
