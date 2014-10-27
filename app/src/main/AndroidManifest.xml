@@ -61,7 +61,7 @@
             /GpsPlayer/app/src/debug/res/values/google_maps_api.xml
             /GpsPlayer/app/src/release/res/values/google_maps_api.xml
 
-            And put an API key obtained from google API console inside.
+            And put an API key obtained from google API console inside. (Adapt the .sample files)
         -->
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
