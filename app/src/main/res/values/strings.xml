@@ -13,6 +13,12 @@
     <string name="action_delete">Delete</string>
     <string name="dialog_delete_track">Delete track ?</string>
 
+    <string name="important_info">
+        This app works better if you have "Device Only" (GPS, no network) selected in your location
+        preferences.\n
+        You also need to allow mock locations in the "Developer options".
+    </string>
+
     <string name="files_explanation">
         To use a GPX file, you can either :\n
         - Place it in the gpsplayer directory on the sdcard (path shown below)\n
