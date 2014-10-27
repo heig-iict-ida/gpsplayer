@@ -1,4 +1,4 @@
-package heigvd.ch.gpsplayer;
+package heigvd.iict.gpsplayer;
 
 import android.content.Context;
 import android.os.Environment;

@@ -1,4 +1,4 @@
-package heigvd.ch.gpsplayer.background;
+package heigvd.iict.gpsplayer.background;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -12,12 +12,12 @@ import android.os.IBinder;
 import android.os.SystemClock;
 import android.util.Log;
 
-import heigvd.ch.gpsplayer.Globals;
-import heigvd.ch.gpsplayer.R;
-import heigvd.ch.gpsplayer.data.Track;
-import heigvd.ch.gpsplayer.data.TrackPoint;
-import heigvd.ch.gpsplayer.events.LocationSentEvent;
-import heigvd.ch.gpsplayer.ui.TrackViewActivity;
+import heigvd.iict.gpsplayer.Globals;
+import heigvd.iict.gpsplayer.R;
+import heigvd.iict.gpsplayer.data.Track;
+import heigvd.iict.gpsplayer.data.TrackPoint;
+import heigvd.iict.gpsplayer.events.LocationSentEvent;
+import heigvd.iict.gpsplayer.ui.TrackViewActivity;
 
 // A background service that will use points in the current active track to set mock locations
 public class RunTrackService extends Service {

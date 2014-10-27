@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="heigvd.ch.gpsplayer" >
+    package="heigvd.iict.gpsplayer" >
 
     <application
         android:allowBackup="true"
@@ -55,6 +55,14 @@
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
+        <!--
+            Note that for the map to work properly, you need to create a new XML file under
+            (debug or release depending on build)
+            /GpsPlayer/app/src/debug/res/values/google_maps_api.xml
+            /GpsPlayer/app/src/release/res/values/google_maps_api.xml
+
+            And put an API key obtained from google API console inside.
+        -->
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="@string/google_maps_key" />

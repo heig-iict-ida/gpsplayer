@@ -1,4 +1,4 @@
-package heigvd.ch.gpsplayer;
+package heigvd.iict.gpsplayer;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

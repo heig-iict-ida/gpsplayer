@@ -5,7 +5,7 @@ android {
     buildToolsVersion "20.0.0"
 
     defaultConfig {
-        applicationId "heigvd.ch.gpsplayer"
+        applicationId "heigvd.iict.gpsplayer"
         minSdkVersion 17
         targetSdkVersion 20
         versionCode 1

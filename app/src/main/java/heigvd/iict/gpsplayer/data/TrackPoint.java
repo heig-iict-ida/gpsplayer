@@ -1,4 +1,4 @@
-package heigvd.ch.gpsplayer.data;
+package heigvd.iict.gpsplayer.data;
 
 public class TrackPoint {
     // Timestamp in milliseconds since epoch

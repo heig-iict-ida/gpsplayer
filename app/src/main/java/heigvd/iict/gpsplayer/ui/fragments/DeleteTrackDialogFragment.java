@@ -1,4 +1,4 @@
-package heigvd.ch.gpsplayer.ui.fragments;
+package heigvd.iict.gpsplayer.ui.fragments;
 
 
 import android.app.Activity;
@@ -10,7 +10,7 @@ import android.os.Bundle;
 
 import java.io.File;
 
-import heigvd.ch.gpsplayer.R;
+import heigvd.iict.gpsplayer.R;
 
 public class DeleteTrackDialogFragment extends DialogFragment {
     private final static String ARG_TRACK_FILE = "trackFile";

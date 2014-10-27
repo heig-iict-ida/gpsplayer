@@ -1,4 +1,4 @@
-package heigvd.ch.gpsplayer.ui;
+package heigvd.iict.gpsplayer.ui;
 
 import android.app.FragmentManager;
 import android.app.ListActivity;
@@ -22,12 +22,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import heigvd.ch.gpsplayer.Globals;
-import heigvd.ch.gpsplayer.io.GpxLoader;
-import heigvd.ch.gpsplayer.R;
-import heigvd.ch.gpsplayer.Utils;
-import heigvd.ch.gpsplayer.data.Track;
-import heigvd.ch.gpsplayer.ui.fragments.DeleteTrackDialogFragment;
+import heigvd.iict.gpsplayer.Globals;
+import heigvd.iict.gpsplayer.io.GpxLoader;
+import heigvd.iict.gpsplayer.R;
+import heigvd.iict.gpsplayer.Utils;
+import heigvd.iict.gpsplayer.data.Track;
+import heigvd.iict.gpsplayer.ui.fragments.DeleteTrackDialogFragment;
 
 
 public class FilesListActivity extends ListActivity implements DeleteTrackDialogFragment.DialogListener {

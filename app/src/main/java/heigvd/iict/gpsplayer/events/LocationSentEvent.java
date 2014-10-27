@@ -1,6 +1,6 @@
-package heigvd.ch.gpsplayer.events;
+package heigvd.iict.gpsplayer.events;
 
-import heigvd.ch.gpsplayer.data.TrackPoint;
+import heigvd.iict.gpsplayer.data.TrackPoint;
 
 // Event sent when RunTrackService sends a new location to LocationManager
 public class LocationSentEvent {

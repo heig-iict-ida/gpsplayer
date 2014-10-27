@@ -1,4 +1,4 @@
-package heigvd.ch.gpsplayer.ui;
+package heigvd.iict.gpsplayer.ui;
 
 import android.app.TaskStackBuilder;
 import android.content.Intent;
@@ -19,11 +19,11 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
-import heigvd.ch.gpsplayer.Globals;
-import heigvd.ch.gpsplayer.R;
-import heigvd.ch.gpsplayer.events.LocationSentEvent;
-import heigvd.ch.gpsplayer.data.Track;
-import heigvd.ch.gpsplayer.data.TrackPoint;
+import heigvd.iict.gpsplayer.Globals;
+import heigvd.iict.gpsplayer.R;
+import heigvd.iict.gpsplayer.events.LocationSentEvent;
+import heigvd.iict.gpsplayer.data.Track;
+import heigvd.iict.gpsplayer.data.TrackPoint;
 
 public class TrackViewActivity extends FragmentActivity {
     private final static String TAG = "TrackViewActivity";

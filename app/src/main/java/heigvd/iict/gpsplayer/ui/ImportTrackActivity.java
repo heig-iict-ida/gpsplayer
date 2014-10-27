@@ -1,4 +1,4 @@
-package heigvd.ch.gpsplayer.ui;
+package heigvd.iict.gpsplayer.ui;
 
 import android.app.Activity;
 import android.app.FragmentManager;
@@ -10,26 +10,21 @@ import android.util.Log;
 
 import com.google.common.io.ByteStreams;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import heigvd.ch.gpsplayer.Globals;
-import heigvd.ch.gpsplayer.R;
-import heigvd.ch.gpsplayer.Utils;
-import heigvd.ch.gpsplayer.data.Track;
-import heigvd.ch.gpsplayer.io.GpxLoader;
-import heigvd.ch.gpsplayer.ui.fragments.FilenameDialogFragment;
+import heigvd.iict.gpsplayer.Globals;
+import heigvd.iict.gpsplayer.R;
+import heigvd.iict.gpsplayer.Utils;
+import heigvd.iict.gpsplayer.data.Track;
+import heigvd.iict.gpsplayer.io.GpxLoader;
+import heigvd.iict.gpsplayer.ui.fragments.FilenameDialogFragment;
 
 // An activity that will import a track (specified as a file in the intent's data uri)
 public class ImportTrackActivity extends Activity implements FilenameDialogFragment.DialogListener {

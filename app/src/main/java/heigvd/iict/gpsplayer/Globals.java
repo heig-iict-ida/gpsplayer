@@ -1,16 +1,14 @@
-package heigvd.ch.gpsplayer;
+package heigvd.iict.gpsplayer;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
 import java.io.File;
 
 import de.greenrobot.event.EventBus;
-import heigvd.ch.gpsplayer.background.RunTrackService;
-import heigvd.ch.gpsplayer.data.Track;
-import heigvd.ch.gpsplayer.events.ServiceStateChangedEvent;
-import heigvd.ch.gpsplayer.ui.TrackViewActivity;
+import heigvd.iict.gpsplayer.background.RunTrackService;
+import heigvd.iict.gpsplayer.data.Track;
+import heigvd.iict.gpsplayer.events.ServiceStateChangedEvent;
 
 public class Globals {
     private static Globals instance = null;

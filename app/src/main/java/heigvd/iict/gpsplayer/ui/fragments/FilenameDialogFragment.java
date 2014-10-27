@@ -1,4 +1,4 @@
-package heigvd.ch.gpsplayer.ui.fragments;
+package heigvd.iict.gpsplayer.ui.fragments;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -13,9 +13,8 @@ import android.text.TextUtils;
 import android.widget.EditText;
 
 import java.io.File;
-import java.nio.charset.Charset;
 
-import heigvd.ch.gpsplayer.R;
+import heigvd.iict.gpsplayer.R;
 
 // A dialog that ask the user to give a filename, limiting the available characters
 public class FilenameDialogFragment extends DialogFragment {

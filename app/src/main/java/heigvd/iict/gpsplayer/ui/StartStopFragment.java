@@ -1,23 +1,17 @@
-package heigvd.ch.gpsplayer.ui;
+package heigvd.iict.gpsplayer.ui;
 
 import android.app.Activity;
-import android.app.Service;
 import android.os.Bundle;
 import android.app.Fragment;
-import android.telephony.ServiceState;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.google.android.gms.maps.model.LatLng;
-
-import heigvd.ch.gpsplayer.Globals;
-import heigvd.ch.gpsplayer.R;
-import heigvd.ch.gpsplayer.data.TrackPoint;
-import heigvd.ch.gpsplayer.events.LocationSentEvent;
-import heigvd.ch.gpsplayer.events.ServiceStateChangedEvent;
+import heigvd.iict.gpsplayer.Globals;
+import heigvd.iict.gpsplayer.R;
+import heigvd.iict.gpsplayer.events.ServiceStateChangedEvent;
 
 
 // Fragment containing start/stop/reset controls

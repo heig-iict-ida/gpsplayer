@@ -5,7 +5,7 @@
     android:orientation="vertical"
     tools:context=".ui.StartStopFragment">
 
-    <fragment android:name="heigvd.ch.gpsplayer.ui.StartStopFragment"
+    <fragment android:name="heigvd.iict.gpsplayer.ui.StartStopFragment"
         android:id="@+id/headlines_fragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/map"
-        tools:context="heigvd.ch.gpsplayer.ui.TrackViewActivity"
+        tools:context="heigvd.iict.gpsplayer.ui.TrackViewActivity"
         android:name="com.google.android.gms.maps.SupportMapFragment"/>
 
 </LinearLayout>

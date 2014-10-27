@@ -1,4 +1,4 @@
-package heigvd.ch.gpsplayer.events;
+package heigvd.iict.gpsplayer.events;
 
 public class ServiceStateChangedEvent {
 }

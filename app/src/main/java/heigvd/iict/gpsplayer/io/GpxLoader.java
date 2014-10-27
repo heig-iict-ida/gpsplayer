@@ -1,4 +1,4 @@
-package heigvd.ch.gpsplayer.io;
+package heigvd.iict.gpsplayer.io;
 
 import android.util.Log;
 
@@ -6,7 +6,6 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -14,9 +13,9 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-import heigvd.ch.gpsplayer.Utils;
-import heigvd.ch.gpsplayer.data.Track;
-import heigvd.ch.gpsplayer.data.TrackPoint;
+import heigvd.iict.gpsplayer.Utils;
+import heigvd.iict.gpsplayer.data.Track;
+import heigvd.iict.gpsplayer.data.TrackPoint;
 
 public class GpxLoader {
     public static class GpxException extends Exception {
