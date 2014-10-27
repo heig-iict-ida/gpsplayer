@@ -2,23 +2,18 @@ package heigvd.ch.gpsplayer.ui;
 
 import android.app.FragmentManager;
 import android.app.ListActivity;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 import android.view.ContextMenu;
-import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -62,6 +57,9 @@ public class FilesListActivity extends ListActivity implements DeleteTrackDialog
         super.onCreate(savedInstanceState);
         mGlobals = Globals.getInstance(this);
         setContentView(R.layout.activity_files_list);
+
+        final TextView appdirTextView = (TextView)findViewById(R.id.appdir);
+        appdirTextView.setText(Utils.getStorageDirectory().getAbsolutePath());
 
         final ListView lv = getListView();
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
