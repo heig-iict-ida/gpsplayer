@@ -11,6 +11,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import heigvd.iict.gpsplayer.Utils;
@@ -155,15 +156,23 @@ public class GpxLoader {
         return new TrackPoint(timestamp, latitude, longitude, altitude);
     }
 
+    private static Date parseISO8601Date(String timestring) throws GpxException {
+        try {
+            return Utils.dateFormatISO8601.parse(timestring);
+        } catch (ParseException e) {
+            try {
+                return Utils.dateFormatISO8601NoS.parse(timestring);
+            } catch (ParseException e2) {
+                throw new GpxException("Error parsing timestring : " + timestring, e);
+            }
+        }
+    }
+
     private static long readTime(XmlPullParser parser) throws XmlPullParserException, GpxException, IOException {
         parser.require(XmlPullParser.START_TAG, ns, "time");
         final String timestring = readText(parser);
         parser.require(XmlPullParser.END_TAG, ns, "time");
-        try {
-            return Utils.dateFormatISO8601.parse(timestring).getTime();
-        } catch (ParseException e) {
-            throw new GpxException("Error parsing timestring : " + timestring, e);
-        }
+        return parseISO8601Date(timestring).getTime();
     }
 
     private static double readElevation(XmlPullParser parser) throws IOException, XmlPullParserException {

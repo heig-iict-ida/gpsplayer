@@ -7,13 +7,19 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
+
+import heigvd.iict.gpsplayer.io.GpxLoader;
 
 public class Utils {
     private final static String TAG = "Utils";
 
     public final static SimpleDateFormat dateFormatISO8601 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
+    // Some GPX files don't store the seconds fraction
+    public final static SimpleDateFormat dateFormatISO8601NoS = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
 
     public static File getStorageDirectory() {
         final File d = Environment.getExternalStoragePublicDirectory("gpsplayer");
